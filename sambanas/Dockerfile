@@ -86,8 +86,9 @@ RUN apk add --no-cache \
     libcap \
     hd-idle \
     fuse3 \
-    apfs-fuse \
     py3-pip
+
+RUN if [ "$BUILD_ARCH" != "armv7" ]; then apk add --no-cache apfs-fuse;fi
 
 # HDDTEMP
 ARG HDDTEMP_VERSION
@@ -120,10 +121,11 @@ RUN ln -s /usr/sbin/apfs-fuse /usr/sbin/mount.apfs
 #RUN pip install pySMART psutil ha-mqtt-discoverable humanize
 RUN pip install \ 
     pySMART==1.3.0 \
-    psutil==5.9.7 \
+    psutil==5.9.8 \
     humanize==4.9.0 \
     diskinfo==2.1.2 \
-    https://github.com/dianlight/ha-mqtt-discoverable/archive/refs/heads/main.zip
+    pydantic==1.10.14 \
+    https://github.com/dianlight/ha-mqtt-discoverable/archive/refs/heads/main.zip#0.13.1
 
 # Copy data
 COPY rootfs /
