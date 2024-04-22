@@ -1,0 +1,40 @@
+[tool.poetry]
+name = "besim-mqtt"
+version = "0.1.0"
+description = "A simulator for the cloud server the BeSMART thermostat/wifi box connects to"
+authors = ["dianlight <lucio.tarantino@gmail.com>","jimmyH <>"]
+license = "GPL-3.0-or-later"
+readme = "README.md"
+package-mode = false
+repository = "https://github.com/dianlight/BeSIM-MQTT"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+crccheck = "^1.3.0"
+flask = "^3.0.3"
+flask-restful = "^0.3.10"
+hexdump = "^3.3"
+flask-cors = "^4.0.0"
+cachetools = "^5.3.3"
+webargs = "^8.4.0"
+argparse = "^1.4.0"
+dnspython = "^2.6.1"
+coloredlogs = "^15.0.1"
+numpy = "^1.26.4"
+ha-mqtt-discoverable = {git = "https://github.com/dianlight/ha-mqtt-discoverable"}
+homeassistant-api = {git = "https://github.com/GrandMoff100/HomeAssistantAPI.git", rev = "f7de6b1b4a5653dd4dd7d60d44169cdb064efde3"}
+requests = "^2.31.0"
+wrapt = "^1.16.0"
+
+[tool.poetry.group.test.dependencies]
+pytest = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib",
+]
+pythonpath = "."
