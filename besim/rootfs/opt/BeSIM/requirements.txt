@@ -1,0 +1,14 @@
+crccheck
+Flask
+Flask-RESTful
+hexdump
+flask-cors
+requests
+cachetools
+webargs
+argparse
+homeassistant_api
+https://github.com/dianlight/ha-mqtt-discoverable/archive/refs/heads/main.zip
+dnspython
+coloredlogs
+numpy
