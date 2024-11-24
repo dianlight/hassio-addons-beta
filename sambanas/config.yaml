@@ -1,5 +1,5 @@
 name: Samba NAS-β
-version: 12.3.2-nas.beta84
+version: 12.3.2-nas1.beta88
 slug: sambanas
 description: Expose Home Assistant disc with SMB/CIFS
 url: https://github.com/dianlight/hassio-addons/tree/master/sambanas
