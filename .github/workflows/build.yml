@@ -27,7 +27,7 @@ jobs:
        
         - name: Extract branch name
           shell: bash
-          run: echo "BR_VERSION=${GITHUB_REF##*/}" >> "$GITHUB_OUTPUT"
+          run: echo "BR_PROJECT=$(TMP=${{github.ref_name}};echo ${TMP##*/})" >> "$GITHUB_OUTPUT"
           id: extract_branch
                 
         - name: Publish ${{ steps.extract_branch.outputs.BR_VERSION }} Addon
