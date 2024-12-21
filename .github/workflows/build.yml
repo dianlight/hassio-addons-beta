@@ -55,12 +55,12 @@ jobs:
           run: echo "BR_PROJECT=$(TMP=${{github.head_ref}};echo ${TMP##*/})" >> "$GITHUB_OUTPUT"
           id: extract_branch
                 
-        - name: Publish ${{ steps.extract_branch.outputs.BR_VERSION }} Addon
+        - name: Publish ${{ steps.extract_branch.outputs.BR_PROJECT }} Addon
           uses: home-assistant/builder@master
           env:
                 CAS_API_KEY: ${{ secrets.CAS_API_KEY }}
           with:
                 args: |
                     --all \
-                    --target ${{ steps.extract_branch.outputs.BR_VERSION }} \
+                    --target ${{ steps.extract_branch.outputs.BR_PROJECT }} \
                     --docker-hub dianlight
