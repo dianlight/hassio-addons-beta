@@ -1,0 +1,58 @@
+# GitHub Action for automatic pull request merging
+
+# Name of the workflow
+name: Auto-merge PR
+
+# Controls when the action will run.
+on:
+  # Trigger the workflow on pull request events
+  pull_request:
+    types: [labeled, synchronize, reopened]
+
+  # Trigger the workflow on status check updates
+  status: {}
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "automerge"
+  automerge:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Step 1: Check for the "autobot" label and successful checks
+      - name: Check for label and successful checks
+        id: check_label
+        # Use a custom script to check conditions
+        run: |
+          # Check if the PR has the "autobot" label
+          if [[ "${{ contains(github.event.pull_request.labels.*.name, 'autobot') }}" == "true" ]]; then
+            echo "PR has the 'autobot' label."
+
+            # Check if all status checks were successful
+            if [[ "${{ github.event.pull_request.head.sha }}" == "$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/commits/${{ github.event.pull_request.head.sha }}/status" | jq -r '.sha')" ]]; then
+              echo "All checks have passed."
+              echo "::set-output name=mergeable::true"
+            else
+              echo "Not all checks have passed."
+            fi
+          else
+            echo "PR does not have the 'autobot' label."
+          fi
+        # Environment variables used in the script
+        env:
+          # The GitHub token is required to use the GitHub API
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Step 2: Merge the pull request if all conditions are met
+      - name: Merge pull request
+        # Only run this step if the previous step set the "mergeable" output to "true"
+        if: steps.check_label.outputs.mergeable == 'true'
+        # Use the official GitHub CLI to merge the pull request
+        run: |
+          gh pr merge ${{ github.event.pull_request.number }} --auto --squash
+        # Environment variables used in the script
+        env:
+          # The GitHub token is required to use the GitHub CLI
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
