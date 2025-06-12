@@ -7,10 +7,7 @@ name: Auto-merge PR
 on:
   # Trigger the workflow on pull request events
   pull_request:
-    types: [labeled, synchronize, reopened]
-
-  # Trigger the workflow on status check updates
-  status: {}
+    types: [labeled, synchronize, reopened ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -21,34 +18,62 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Step 1: Check for the "autobot" label and successful checks
+      # Step 1: Check for the "autobot" label and successful commit statuses
       - name: Check for label and successful checks
-        id: check_label
-        # Use a custom script to check conditions
         run: |
+          MERGEABLE="false" # Default value
+
           # Check if the PR has the "autobot" label
           if [[ "${{ contains(github.event.pull_request.labels.*.name, 'autobot') }}" == "true" ]]; then
             echo "PR has the 'autobot' label."
 
-            # Check if all status checks were successful
-            if [[ "${{ github.event.pull_request.head.sha }}" == "$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/commits/${{ github.event.pull_request.head.sha }}/status" | jq -r '.sha')" ]]; then
-              echo "All checks have passed."
-              echo "::set-output name=mergeable::true"
+            # Get the combined status for the PR's head commit
+            STATUS_URL="https://api.github.com/repos/${{ github.repository }}/commits/${{ github.event.pull_request.head.sha }}/status"
+            echo "Fetching commit status from: $STATUS_URL"
+
+            # -s: silent, -f: fail silently on server errors (4xx, 5xx), -L: follow redirects
+            COMMIT_STATUS_RESPONSE=$(curl -sfL -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github.v3+json" "$STATUS_URL")
+            CURL_EXIT_CODE=$?
+
+            if [[ "$CURL_EXIT_CODE" -ne 0 ]]; then
+              echo "Error: Failed to fetch commit status from GitHub API. Curl exit code: $CURL_EXIT_CODE"
+              # MERGEABLE remains "false"
             else
-              echo "Not all checks have passed."
+              COMMIT_STATE=$(echo "$COMMIT_STATUS_RESPONSE" | jq -r '.state')
+              JQ_EXIT_CODE=$?
+
+              if [[ "$JQ_EXIT_CODE" -ne 0 ]]; then
+                echo "Error: Failed to parse commit status JSON with jq. JQ exit code: $JQ_EXIT_CODE"
+                echo "Response was: $COMMIT_STATUS_RESPONSE"
+                # MERGEABLE remains "false"
+              elif [[ "$COMMIT_STATE" == "success" ]]; then
+                echo "All checks have passed (state: $COMMIT_STATE)."
+                MERGEABLE="true"
+              else
+                echo "Not all checks have passed (state: $COMMIT_STATE)."
+                # MERGEABLE remains "false"
+              fi
             fi
           else
             echo "PR does not have the 'autobot' label."
+            # MERGEABLE remains "false"
           fi
-        # Environment variables used in the script
+
+          echo "MERGEABLE=${MERGEABLE}" >> $GITHUB_ENV
+          echo "Automerge condition: MERGEABLE is ${MERGEABLE}" # For logging
         env:
-          # The GitHub token is required to use the GitHub API
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Checkout code
+        if: env.MERGEABLE == 'true'
+        uses: actions/checkout@v4
+        with:
+          # Fetch all history for all tags and branches to accurately diff
+          fetch-depth: 0
 
       # Step 2: Merge the pull request if all conditions are met
       - name: Merge pull request
-        # Only run this step if the previous step set the "mergeable" output to "true"
-        if: steps.check_label.outputs.mergeable == 'true'
+        if: env.MERGEABLE == 'true'
         # Use the official GitHub CLI to merge the pull request
         run: |
           gh pr merge ${{ github.event.pull_request.number }} --auto --squash
