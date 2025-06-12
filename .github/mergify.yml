@@ -1,0 +1,9 @@
+pull_request_rules:
+  - name: automatic merge for ready pull requests
+    conditions:
+      - check-success = build
+      - check-success = enforce-path
+      - label=ready-to-merge
+    actions:
+      merge:
+        method: squash
