@@ -3,7 +3,7 @@ pull_request_rules:
     conditions:
       - check-success = build
       - check-success = enforce-path
-      - label=ready-to-merge
+      - label = autobot
     actions:
       merge:
         method: squash
