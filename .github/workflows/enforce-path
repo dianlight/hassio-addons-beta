@@ -1,0 +1,69 @@
+# GitHub Action to enforce that changes are in a specific project directory
+
+# Name of the workflow
+name: Enforce Project Path
+
+# Controls when the action will run.
+on:
+  # Trigger the workflow on pull request events
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "enforce-path"
+  enforce-path:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Step 1: Check out the repository's code so we can access it
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # Fetch all history for all tags and branches to accurately diff
+          fetch-depth: 0
+
+      # Step 2: Check the source branch and verify file paths
+      - name: Check file paths based on source branch
+        run: |
+          # Get the source branch name from the GitHub event context
+          SOURCE_BRANCH="${{ github.event.pull_request.head.ref }}"
+
+          # Use a regex to check if the branch name matches the 'autobot/<project>' pattern
+          if [[ "$SOURCE_BRANCH" =~ ^autobot\/(.*) ]]; then
+            # Extract the project name from the branch name using the regex match
+            PROJECT_NAME="${BASH_REMATCH[1]}"
+            echo "Source branch matches pattern. Enforcing changes are within the '$PROJECT_NAME/' directory."
+
+            # Check if a project name was actually extracted
+            if [ -z "$PROJECT_NAME" ]; then
+                echo "Error: Could not extract project name from source branch '$SOURCE_BRANCH'."
+                exit 1
+            fi
+
+            # Get the list of changed files by diffing the base and head of the PR
+            # This is a reliable way to get all changes in the pull request
+            CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }})
+
+            echo "--- Changed Files ---"
+            echo "$CHANGED_FILES"
+            echo "---------------------"
+
+            # Loop through each changed file
+            for file in $CHANGED_FILES; do
+              # Check if the file path starts with the project directory
+              if [[ ! "$file" == "$PROJECT_NAME"/* ]]; then
+                # If a file is found outside the directory, print an error and fail the job
+                echo "Error: File '$file' is outside the allowed '$PROJECT_NAME/' directory."
+                exit 1
+              fi
+            done
+
+            # If the loop completes, all files are valid
+            echo "All changed files are within the '$PROJECT_NAME/' directory. Check passed."
+          else
+            # If the branch name does not match, skip the check
+            echo "Source branch '$SOURCE_BRANCH' does not match 'autobot/<project>' pattern. Skipping check."
+          fi
