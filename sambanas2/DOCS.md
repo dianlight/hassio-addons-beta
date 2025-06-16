@@ -4,6 +4,37 @@
 
 This addon has been designed, built and tested to work with HAOS (Homeassistant Operating System). The use in other types of installations is not recommended and useless as other solutions given by the host can be used.
 
+## Feature Comparison: SambaNAS vs SambaNAS2
+
+### Introduction
+
+SambaNAS2 is a newly released successor to the original SambaNAS add-on. Please note that SambaNAS2 is still under active development and does not yet provide all the features available in the original SambaNAS. Some advanced functionalities will be introduced in future versions as the project continues to evolve.
+
+The following table compares the major functionalities available in SambaNAS and SambaNAS2:
+
+| Functionality                     | SambaNAS | SambaNAS2 |
+|------------------------------------|:--------:|:---------:|
+| CIFS Volume Exporting              |    ✔️     |    ✔️      |
+| NFS Volume Exporting               |    ❌     |  🚧 Soon   |
+| Mounting additional volumes        |    ✔️     |    ✔️      |
+| Enhanced mount flags management    |    ❌     |    ✔️      |
+| Umounting volumes                  |    ❌     |    ✔️      |
+| Hotplug device events              |    ❌     |  🚧 Soon   |
+| User Management                    |    ✔️     |    ✔️      |
+| User HA Integration                |    ❌     |  🚧 Soon   |
+| Advanced Share Permissions         |    ❌     |  🚧 Soon   |
+| Recycle Bin Support                |    ❌     |    ✔️      |
+| Web UI for Management              |    ❌     |    ✔️      |
+| Enhanced Logging                   |    ❌     |    ✔️      |
+| SMB Multichannel Support           |    ✔️     |    ✔️      |
+| Regular Updates                    |  🔚 EOL   |    ✔️      |
+| MQTT integration                   |    ✔️     |    ❌      |
+| Component Integration              |    ❌     |  🚧 Soon   |
+| WSDD and WSDD2 Integration         |    ✔️     |    ✔️      |
+| Watchdog                           |    ✔️     |  🚧 Soon   |
+
+> ✔️ = Supported  ❌ = Not Supported  🚧 Soon = Coming in future versions  🔚 EOL = End of Life
+
 ## Installation
 
 Follow these steps to get the add-on installed on your system:
@@ -47,7 +78,7 @@ Fields between `<` and `>` indicate values that are omitted and need to be chang
 ```yaml
   wsdd: true
   wsdd2: false
-  update_srat_onstart: no
+  srat_update_channel: none
   interfaces: []
 ```
 
@@ -108,7 +139,7 @@ Enable SMART on all disks, enable automatic offline testing every four hours, an
 
 Defaults to `true`.
 
-### Options `update_srat_onstart` (optional) **_Exteprimental_**
+### Options `srat_update_channel` (optional) **_Exteprimental_**
 
 SRAT (Samba REST Administration Tool) is a new system designed to provide a simplified user interface for configuring SAMBA. It has been developed to work within Home Assistant, specifically for this addon, but can also be used in other contexts.
 
@@ -117,7 +148,7 @@ Currently under development and in an alpha state, SRAT is set to become the pre
 Setting this option to `release` or `prerelease` turn on the auto update of srat ( Samba Rest Adminitration Tool )
 on the choosed channel.
 
-Defaults to `no`
+Defaults to `none`
 
 ## Support
 
