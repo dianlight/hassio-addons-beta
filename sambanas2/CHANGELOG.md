@@ -20,7 +20,7 @@
     - [ ] Tutorial screenshots?
 - [ ] En translation 
 
-### 🐭 Features from SRAT [v2025.6.10-dev.0](https://github.com/dianlight/srat)
+### 🐭 Features from SRAT [v2025.7.0-dev.1](https://github.com/dianlight/srat)
 
 ####  ✨ Features
 - Manage `recycle bin`option for share
