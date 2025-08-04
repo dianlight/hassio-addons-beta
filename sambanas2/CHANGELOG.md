@@ -1,6 +1,6 @@
 # Changelog
 
-## 2025.6.0-dev [ 🚧 Unreleased ]
+## 2025.8.0-dev [ 🚧 Unreleased ]
 
 ###  ✨ Features
 - Brand New icon and logo AI Generated
@@ -16,11 +16,11 @@
 - Fork SambaNas to the new SambaNas2 addon
 - New version model
 #### __🚧 Work in progess__
-- [ ] Update the documentation
+- [x] Update the documentation
     - [ ] Tutorial screenshots?
 - [ ] En translation 
 
-### 🐭 Features from SRAT [v2025.7.0-dev.1](https://github.com/dianlight/srat)
+### 🐭 Features from SRAT [v2025.8.0-dev.1](https://github.com/dianlight/srat)
 
 ####  ✨ Features
 - Manage `recycle bin`option for share
@@ -33,12 +33,13 @@
 - [ ] Manage `local master`option (?)
 - [ ] Help screen or overlay help/tour [#82](https://github.com/dianlight/srat/issues/82)
 - [ ] Custom component [#83](https://github.com/dianlight/srat/issues/83)
-- [ ] Smart Control [#100](https://github.com/dianlight/srat/issues/100)
-- [ ] HDD Spin down [#101](https://github.com/dianlight/srat/issues/101)
+- [x] Smart Control [#100](https://github.com/dianlight/srat/issues/100)
+- [x] HDD Spin down [#101](https://github.com/dianlight/srat/issues/101)
 
 ####  🐛 Bug Fixes
 - `enable`/`disable` share functionality is not working as expected.
 - Renaming the admin user does not correctly create the new user or rename the existing one; issues persist until a full addon reboot.
+- Fix dianlight/hassio-addons#448 [SambaNAS2] Unable to create share for mounted volume
 ##### __🚧 Work in progess__
 - [W] Addon protected mode check [#80](https://github.com/dianlight/srat/issues/85)
 
