@@ -6,8 +6,9 @@
 - Brand New icon and logo AI Generated
 - New option `srat_update_channel`to manage SRAT Update (EXPERIMENTAL [DOCS](DOCS.md) )
 - New UI (SRAT) to read and control the addon. (See [SRAT Repository](https://github.com/dianlight/srat) )
-- Announce Samba service via Avahi/mDNS for better discovery
+- ~~Announce Samba service via Avahi/mDNS for better discovery~~ Remove for side effects
 - Support ~~WSDD~~ and WSDD2
+- Automatic modprobe for all kernel fs
 #### __🚧 Work in progess__
 - [ ] ACL For folders [#208](https://github.com/dianlight/hassio-addons/issues/208)
 - [ ] Migrate config from SambaNas addon
@@ -17,13 +18,15 @@
 - New version model
 #### __🚧 Work in progess__
 - [x] Update the documentation
-    - [ ] Tutorial screenshots?
+    - [x] Tutorial screenshots?
 - [ ] En translation 
 
-### 🐭 Features from SRAT [v2025.8.0-dev.5](https://github.com/dianlight/srat)
+### 🐭 Features from SRAT [v2025.8.0-dev.6](https://github.com/dianlight/srat)
 
 #### ✨ Features
 
+- **Auto-Update Service**: Implemented a backend service for automatic updates from GitHub releases, with support for multiple channels and local development builds.
+- **Telemetry Configuration**: Added UI in Settings to configure telemetry modes, dependent on internet connectivity.
 - Manage `recycle bin`option for share
 - Manage WSDD2 service
 - Manage Avahi service
@@ -49,7 +52,6 @@
 
 - [ ] Manage `local master` option (?)
 - [ ] Help screen or overlay help/tour [#82](https://github.com/dianlight/srat/issues/82)
-- [ ] Custom component [#83](https://github.com/dianlight/srat/issues/83)
 - [x] Smart Control [#100](https://github.com/dianlight/srat/issues/100)
 - [x] HDD Spin down [#101](https://github.com/dianlight/srat/issues/101)
 
@@ -75,8 +77,5 @@
   - Updated `github.com/samber/lo` to v1.51.0
   - Added `github.com/samber/slog-common` v0.19.0 for enhanced logging functionality
   - Added gohack replace directives for `samber/slog-http` and `jpillora/overseer` for development
-
-##### **🚧 Work in progress**
-
-- [ ] Create the base documentation [#80](https://github.com/dianlight/srat/issues/80)
-- [ ] Display version from ADDON
+- Create the base documentation [#80](https://github.com/dianlight/srat/issues/80)
+- Display version from ADDON
