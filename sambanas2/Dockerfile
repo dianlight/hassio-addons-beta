@@ -89,11 +89,14 @@ RUN apk add --no-cache \
     socat \
     figlet \
     shadow \
-    avahi \
-    avahi-compat-libdns_sd \
-    avahi-tools \
+    # avahi \
+    # avahi-compat-libdns_sd \
+    # avahi-tools \
     envsubst \
-    ethtool 
+    ethtool \
+    erofs-utils \
+    squashfs-tools
+
 
 # hadolint ignore=DL3018,DL3003
 RUN if [ "$BUILD_ARCH" != "armv7" ]; then \
@@ -101,7 +104,7 @@ RUN if [ "$BUILD_ARCH" != "armv7" ]; then \
     fi
 
 # AVAHI (Remove all services)
-RUN rm -f /etc/avahi/services/*.service 
+# RUN rm -f /etc/avahi/services/*.service 
 
 # WSDD2
 COPY --from=builder /wsdd2-master/wsdd2 /usr/sbin
