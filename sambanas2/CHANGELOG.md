@@ -21,7 +21,7 @@
     - [x] Tutorial screenshots?
 - [ ] En translation 
 
-### 🐭 Features from SRAT [v2025.8.0-dev.7](https://github.com/dianlight/srat)
+### 🐭 Features from SRAT [v2025.8.0-dev.6](https://github.com/dianlight/srat)
 
 #### ✨ Features
 
@@ -50,8 +50,8 @@
 
 ##### **🚧 Work in progress**
 
-- [x] Manage `local master` option (?)
-- [x] Help screen or overlay help/tour [#82](https://github.com/dianlight/srat/issues/82)
+- [ ] Manage `local master` option (?)
+- [ ] Help screen or overlay help/tour [#82](https://github.com/dianlight/srat/issues/82)
 - [x] Smart Control [#100](https://github.com/dianlight/srat/issues/100)
 - [x] HDD Spin down [#101](https://github.com/dianlight/srat/issues/101)
 
