@@ -1,6 +1,6 @@
 # Changelog
 
-## 2025.8.0-dev [ 🚧 Unreleased ]
+## 2025.9.0-dev [ 🚧 Unreleased ]
 
 ###  ✨ Features
 - Brand New icon and logo AI Generated
@@ -21,7 +21,7 @@
     - [x] Tutorial screenshots?
 - [ ] En translation 
 
-### 🐭 Features from SRAT [v2025.8.0-dev.8](https://github.com/dianlight/srat)
+### 🐭 Features from SRAT [v2025.9.0-dev.0](https://github.com/dianlight/srat)
 
 #### ✨ Features
 
