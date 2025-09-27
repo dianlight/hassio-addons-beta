@@ -20,7 +20,7 @@
     - [x] Tutorial screenshots?
 - [x] En translation 
 
-### 🐭 Features from SRAT [v2025.9.0-dev.3](https://github.com/dianlight/srat)
+### 🐭 Features from SRAT [v2025.9.0-dev.4](https://github.com/dianlight/srat)
 
 #### ✨ Features
 
