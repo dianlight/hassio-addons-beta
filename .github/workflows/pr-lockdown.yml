@@ -1,0 +1,90 @@
+name: PR lockdown for mirror repo
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, labeled, unlabeled, ready_for_review]
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      issues: write
+      contents: read
+    steps:
+      - name: Enforce PR policy for mirror repo
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const pr = context.payload.pull_request;
+            const author = pr.user.login;
+            const labels = pr.labels.map(l => l.name);
+
+            const allowedAuthors = (process.env.ALLOWED_AUTHORS || 'dianlight,github-actions[bot],github-copilot[bot]').split(',')
+              .map(s => s.trim())
+              .filter(Boolean);
+            const allowedLabel = process.env.ALLOWED_LABEL || 'autobot';
+
+            const isAllowed = allowedAuthors.includes(author) || labels.includes(allowedLabel);
+
+            core.info(`Author: ${author}`);
+            core.info(`Labels: ${labels.join(', ')}`);
+            core.info(`Allowed authors: ${allowedAuthors.join(', ')}`);
+            core.info(`Allowed label: ${allowedLabel}`);
+
+            if (isAllowed) {
+              core.info('PR is allowed, exiting.');
+              return;
+            }
+
+            const body = [
+              'Thanks for the contribution! However, this repository is part of automated change management for the master repository [dianlight/hassio-addons](https://github.com/dianlight/hassio-addons).',
+              '',
+              'Please open any requests, issues, or pull requests in the master repository instead.',
+              '',
+              'This pull request will now be closed and locked.'
+            ].join('\\n');
+
+            // Avoid duplicate comments from the bot
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              per_page: 100
+            });
+            const alreadyCommented = comments.some(c => c.user.type === 'Bot' && c.body.includes('automated change management'));
+            if (!alreadyCommented) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                body
+              });
+            }
+
+            // Close the PR if it isn't already closed
+            if (pr.state !== 'closed') {
+              await github.rest.pulls.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: pr.number,
+                state: 'closed'
+              });
+            }
+
+            // Lock the conversation to prevent further comments
+            try {
+              await github.rest.issues.lock({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                lock_reason: 'off-topic'
+              });
+            } catch (e) {
+              core.warning(`Failed to lock PR: ${e.message}`);
+            }
+        env:
+          # Optional overrides via repository variables
+          ALLOWED_AUTHORS: ${{ vars.ALLOWED_AUTHORS }}
+          ALLOWED_LABEL: ${{ vars.ALLOWED_LABEL }}
