@@ -1,6 +1,15 @@
 # Changelog
 
-## 12.5.0-nas1 [ Maintenance Mode ]
+## 12.5.0-nas2 [ Maintenance Mode ]
+
+### 🩹 BugFix
+- [x] Fix regression on unable to mount disks at startup if acl is not set [[#516](https://github.com/dianlight/hassio-addons/issues/516)]
+- [x] Fix duplicate shares in smb.conf creation (variable scoping issue) [[#516](https://github.com/dianlight/hassio-addons/issues/516)]
+  - Fixed incorrect regex function call syntax in smb.gtpl template that caused share names to be generated incorrectly
+- [ ] Fix regression on unable to mount disks with special characters in label [[[#517](https://github.com/dianlight/hassio-addons/issues/517)]
+
+
+## 12.5.0-nas1 [ Maintenance Mode - **retired** ]
 
 ### 🩹 BugFix
 
