@@ -1,9 +1,11 @@
 name: Samba NAS2-β
-version: 2025.12.0-beta.147
+version: 2025.9.0-beta.144
 slug: sambanas2
 description: Expose Home Assistant disc with SMB/CIFS
 url: https://github.com/dianlight/hassio-addons/tree/master/sambanas2
+codenotary: lucio.tarantino@gmail.com
 arch:
+  - armv7
   - aarch64
   - amd64
 startup: application
@@ -11,7 +13,7 @@ watchdog: tcp://[HOST]:[PORT:445]
 ports:
   3000/tcp: null
 ports_description:
-  3000/tcp: Web interface
+  3000/tcp: Web interface (to use without Home Assistant)
 ingress: true
 ingress_port: 0
 ingress_entry: index.html
@@ -35,9 +37,13 @@ map:
   - media:rw
 options:
   srat_update_channel: none
+  enable_smart: true
+  hdd_idle_seconds: 30
   log_level: warning
   leave_front_door_open: false
 schema:
+  hdd_idle_seconds: int(0,)?
+  enable_smart: bool?
   srat_update_channel: list(none|release|prerelease)?
   log_level: list(trace|debug|info|notice|warning|error|fatal)?
   leave_front_door_open: bool?
@@ -55,7 +61,7 @@ devicetree: false
 apparmor: true
 host_ipc: true
 advanced: true
-homeassistant: 2025.8.0
+homeassistant: 2025.5.0
 backup: hot
 auth_api: true
 homeassistant_api: true

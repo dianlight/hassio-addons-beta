@@ -1,23 +1,6 @@
 # Changelog
 
-## 2025.12.0-dev [ 🚧 Unreleased ]
-
-### 🙏 Thanks
-
-- Thanks to all the contributors and users that help to make this addon better.
-- Special thanks to supportes and soponsors. With our support I was able to buy a copilot subscription to help me code faster and better.
-
-### 🚨 Notes
-- This has been a big refactor to make the addon more efficient and use less resources. Some features have been removed or changed to improve stability and performance. Some will be added back in future releases.
-- ***Your existing configuration will be lost when updating to this version. Please backup your configuration before updating.***
-- ***If you need SMART capabilities or HDIdle support don't update and wait next releases.***
-
-#### 💥 Breaking Changes
-- Remove support to armv7 architecture
-- Remove HDIdle support (for now is added back in future releases)
-- Remove SMART capabilities (for now is added back in future releases)
-- Remove Avahi/mDNS support (due to side effects on some systems)
-- Remove WSDD support (due to instability)
+## 2025.9.0-dev [ 🚧 Unreleased ]
 
 ###  ✨ Features
 - Brand New icon and logo AI Generated
@@ -26,56 +9,63 @@
 - ~~Announce Samba service via Avahi/mDNS for better discovery~~ Remove for side effects
 - Support ~~WSDD~~ and WSDD2
 - Automatic modprobe for all kernel fs
-- Add ability to use Custom Samba Version - Custom Build Only 
+#### __🚧 Work in progess__
+- [ ] Migrate config from SambaNas addon
 
 ### 🏗 Chore
 - Fork SambaNas to the new SambaNas2 addon
-- New version model based on year.month.patch
-- Samba to 4.23.1 compatibility 
-- Update base image to latest Home Assistant base image 19.0.0
-- Update the documentation
-- Refactor the code to use less resources and be more efficient
-- Improve the logging system 
+- New version model
+#### __🚧 Work in progess__
+- [x] Update the documentation
+    - [x] Tutorial screenshots?
+- [x] En translation 
 
-
-### 🐭 Features from SRAT [v2025.12.0-dev.1](https://github.com/dianlight/srat)
-
-#### 🙏 Thanks
-
-We would like to thank all supporters for their contributions and donations!
-With your donations, we are able to continue developing and improving this project. Your support is greatly appreciated!
-
-#### 🧑‍🏫 Documentation
-
-#### 🐛 Bug Fixes
-
-- **Udev Event Parsing Error Handling**: Improved handling of malformed udev events to prevent spurious error reports to Rollbar. Malformed events with invalid environment data are now logged at debug level instead of error level, reducing noise in error tracking while maintaining visibility for legitimate errors.
-
-#### 🔄 Breaking Changes
-
-- **SMB over QUIC Default Behavior Change**: The SMB over QUIC feature is now disabled by default. Users must explicitly enable it in the settings to use this functionality. This change aims to enhance security and stability by preventing unintended use of the experimental protocol.
-- **Telemetry Service Update**: The telemetry service has been updated to use Rollbar for error tracking and monitoring. This change may require users to review their privacy settings and consent to data collection, as Rollbar collects different types of data compared to the previous telemetry solution.
-- **Auto-Update Service Modification**: The auto-update service has been modified to support multiple update channels (stable, beta, dev) and local development builds. Users may need to reconfigure their update preferences to align with the new channel system.
-
-#### 🔧 Maintenance
-
-- Updated dependencies to latest versions to ensure security and compatibility.
+### 🐭 Features from SRAT [v2025.9.0-dev.4](https://github.com/dianlight/srat)
 
 #### ✨ Features
 
-- **Enhanced SMART Service [#234](https://github.com/dianlight/srat/issues/234)**: Implemented comprehensive SMART disk monitoring and control features:
-- **SMB over QUIC Support [#227](https://github.com/dianlight/srat/issues/227)**: Added comprehensive support for SMB over QUIC transport protocol with intelligent system detection
 - **Auto-Update Service**: Implemented a backend service for automatic updates from GitHub releases, with support for multiple channels and local development builds.
 - **Telemetry Configuration**: Added UI in Settings to configure telemetry modes, dependent on internet connectivity.
+- Manage `recycle bin`option for share
+- Manage WSDD2 service
+- Manage Avahi service
+- Veto files for share not global [#79](https://github.com/dianlight/srat/issues/79)
+- Ingress security validation [#89](https://github.com/dianlight/srat/issues/89)
+- Dashboard
+- Frontend: Async console.error callbacks & React hook — added a registry to register callbacks executed asynchronously whenever `console.error` is called, plus `useConsoleErrorCallback` hook for easy integration in components.
+- **Enhanced TLog Package [#152](https://github.com/dianlight/srat/issues/152)**: Complete logging system overhaul with advanced formatting capabilities:
+  - Added support for `github.com/k0kubun/pp/v3` for enhanced pretty printing
+  - Integrated `samber/slog-formatter` for professional-grade log formatting
+  - Enhanced error formatting with structured display and tree-formatted stack traces for `tozd/go/errors`
+  - Automatic terminal detection for color support
+  - Sensitive data protection (automatic masking of passwords, tokens, API keys, IP addresses)
+  - Custom time formatting with multiple preset options
+  - Enhanced context value extraction and display
+  - HTTP request/response formatting for web applications
+  - Comprehensive color support with level-based coloring (TRACE=Gray, DEBUG=Cyan, INFO=Green, etc.)
+  - Thread-safe configuration management
+  - Backward compatibility maintained with existing code
 - Manage `local master` option (?)
 - Add Rollbar telemetry service for error tracking and monitoring
 - Help screen or overlay help/tour [#82](https://github.com/dianlight/srat/issues/82)
 - Smart Control [#100](https://github.com/dianlight/srat/issues/100)
 - HDD Spin down [#101](https://github.com/dianlight/srat/issues/101)
 
+#### 🐛 Bug Fixes
+
+- `enable`/`disable` share functionality is not working as expected.
+- Renaming the admin user does not correctly create the new user or rename the existing one; issues persist until a full addon reboot.
+- Fix dianlight/hassio-addons#448 [SambaNAS2] Unable to create share for mounted volume
+- Fix dianlight/hassio-addons#447 [SambaNAS2] Unable to mount external drive
+- **Disk Stats Service**: Changed log level from `Error` to `Warn` for disk stats update failures to reduce log noise and better distinguish between critical errors and warnings
+- **SQLite concurrency lock (SQLITE_BUSY) resolved [#164](https://github.com/dianlight/srat/issues/164)**: Hardened database configuration to prevent intermittent "database is locked" errors when reading mount points under concurrent load. Changes include enabling WAL mode, setting `busy_timeout=5000ms`, using `synchronous=NORMAL`, and constraining the connection pool to a single open/idle connection. Added repository-level RWMutex guards and a concurrency stress test.
+- Addon protected mode check [#85](https://github.com/dianlight/srat/issues/85)
+
 #### 🏗 Chore
 
-- Replace snapd osutil dependency with internal mount utilities based on moby/sys/mountinfo <!-- cspell:disable-line -->
+- Implement watchdog
 - Align UI elements to HA [#81](https://github.com/dianlight/srat/issues/81)
 - Create the base documentation [#80](https://github.com/dianlight/srat/issues/80)
 - Display version from ADDON
+
+##### **🚧 Work in progress**
