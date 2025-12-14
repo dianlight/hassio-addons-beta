@@ -24,7 +24,7 @@
 - New option `srat_update_channel`to manage SRAT Update (EXPERIMENTAL [DOCS](DOCS.md) )
 - New UI (SRAT) to read and control the addon. (See [SRAT Repository](https://github.com/dianlight/srat) )
 - ~~Announce Samba service via Avahi/mDNS for better discovery~~ Remove for side effects
-- Support ~~WSDD~~ and WSDD2
+- Support ~~WSDD and WSDD2~~ Wsdd-native for better Windows Discovery (Remove WSDD due to instability)
 - Automatic modprobe for all kernel fs
 - Add ability to use Custom Samba Version - Custom Build Only 
 
@@ -38,7 +38,7 @@
 - Improve the logging system 
 
 
-### 🐭 Features from SRAT [v2025.12.0-dev.2](https://github.com/dianlight/srat)
+### 🐭 Features from SRAT [v2025.12.0-dev.5](https://github.com/dianlight/srat)
 
 #### 🙏 Thanks
 
