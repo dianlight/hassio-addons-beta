@@ -38,7 +38,7 @@
 - Improve the logging system 
 
 
-### 🐭 Features from SRAT [v2025.12.0-dev.5](https://github.com/dianlight/srat)
+### 🐭 Features from SRAT [v2025.12.0-dev.6](https://github.com/dianlight/srat)
 
 #### 🙏 Thanks
 
