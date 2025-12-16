@@ -17,7 +17,6 @@
 - Remove HDIdle support (for now is added back in future releases)
 - Remove SMART capabilities (for now is added back in future releases)
 - Remove Avahi/mDNS support (due to side effects on some systems)
-- Remove WSDD support (due to instability)
 
 ###  ✨ Features
 - Brand New icon and logo AI Generated
@@ -38,7 +37,7 @@
 - Improve the logging system 
 
 
-### 🐭 Features from SRAT [v2025.12.0-dev.6](https://github.com/dianlight/srat)
+### 🐭 Features from SRAT [v2025.12.0-dev.8](https://github.com/dianlight/srat)
 
 #### 🙏 Thanks
 
