@@ -15,16 +15,5 @@ configuration:
     description: >-
       Saat diaktifkan, antarmuka web bisa diakses tanpa login. Gunakan hanya di
       jaringan tepercaya.
-  disable_ipv6:
-    name: Disable IPv6 stack
-    description: >-
-      When enabled (default), the add-on disables IPv6 and forces services to
-      bind to IPv4 only. Set to false to allow IPv6.
-  clean_upgrade_dir:
-    name: Bersihkan direktori pembaruan
-    description: >-
-      Menghapus semua pembaruan biner SRAT yang diunduh dari direktori data add-on.
-      Gunakan hanya dalam situasi darurat untuk membersihkan file pembaruan yang
-      rusak. Tindakan ini permanen dan tidak dapat dibatalkan.
 network:
   3000/tcp: Antarmuka web (tanpa Home Assistant)

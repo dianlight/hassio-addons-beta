@@ -219,7 +219,6 @@ RUN apk add --no-cache \
     btrfs-progs \
     xfsprogs \
     udev \
-    binutils \
     eudev \
     hwids-udev \
     device-mapper-udev \

@@ -15,16 +15,5 @@ configuration:
     description: >-
       Если включено, веб-интерфейс доступен без входа. Используйте только в
       доверенных сетях.
-  disable_ipv6:
-    name: Disable IPv6 stack
-    description: >-
-      When enabled (default), the add-on disables IPv6 and forces services to
-      bind to IPv4 only. Set to false to allow IPv6.
-  clean_upgrade_dir:
-    name: Очистить каталог обновлений
-    description: >-
-      Удаляет все загруженные бинарные обновления SRAT из каталога данных аддона.
-      Используйте только в чрезвычайных ситуациях для очистки поврежденных файлов
-      обновлений. Это действие необратимо.
 network:
   3000/tcp: Веб-интерфейс (без Home Assistant)
