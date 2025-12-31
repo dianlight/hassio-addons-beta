@@ -15,5 +15,16 @@ configuration:
     description: >-
       Quando ativado, a interface web fica acessível sem login. Use somente em
       redes confiáveis.
+  disable_ipv6:
+    name: Disable IPv6 stack
+    description: >-
+      When enabled (default), the add-on disables IPv6 and forces services to
+      bind to IPv4 only. Set to false to allow IPv6.
+  clean_upgrade_dir:
+    name: Limpar diretório de atualização
+    description: >-
+      Remove todas as atualizações binárias do SRAT baixadas do diretório de dados
+      do add-on. Use apenas em situações de emergência para limpar arquivos de
+      atualização corrompidos. Esta ação é permanente e irreversível.
 network:
   3000/tcp: Interface web (sem Home Assistant)
