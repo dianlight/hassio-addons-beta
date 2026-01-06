@@ -5,6 +5,12 @@ configuration:
     description: >-
       Izberite, kako se SRAT (Samba REST Administration Tool) posodablja: none,
       release, prerelease ali develop.
+  auto_update:
+    name: Samodejne posodobitve
+    description: >-
+      Samodejno prenesi in namesti posodobitve SRAT, ko so na voljo na izbranem
+      posodobitvenim kanalu. Zahteva, da je srat_update_channel nastavljen na
+      kaj drugega kot 'none'.
   log_level:
     name: Raven beleženja
     description: >-
@@ -16,15 +22,24 @@ configuration:
       Ko je omogočeno, je spletni vmesnik dostopen brez prijave. Uporabljajte le
       v zaupanja vrednih omrežjih.
   disable_ipv6:
-    name: Disable IPv6 stack
+    name: Onemogoči IPv6 sklad
     description: >-
-      When enabled (default), the add-on disables IPv6 and forces services to
-      bind to IPv4 only. Set to false to allow IPv6.
+      Ko je omogočeno (privzeto), dodatek onemogoči IPv6 in prisili storitve,
+      da se vežejo samo na IPv4. Nastavite na false za omogočanje IPv6.
   clean_upgrade_dir:
     name: Počisti imenik za nadgradnjo
     description: >-
       Odstrani vse prenesene binarne posodobitve SRAT iz imenika podatkov dodatka.
       Uporabite samo v nujnih primerih za čiščenje poškodovanih datotek posodobitev.
       To dejanje je trajno in ga ni mogoče razveljaviti.
+  factory_reset:
+    name: Tovarniška ponastavitev
+    description: >-
+      ⚠️ NEVARNOST - DESTRUKTIVNO DEJANJE ⚠️ Izvede popolno tovarniško ponastavitev
+      z brisanjem podatkovne baze SQL, vseh konfiguracij, nastavitev in datotek
+      posodobitev. To bo trajno izbrisalo vse konfiguracije souporabe Samba, uporabniške
+      račune, gesla in po meri prilagojene nastavitve. Dodatek se bo znova zagnal
+      z privzetimi nastavitvami. To dejanje je nepreklicno in ga ni mogoče razveljaviti.
+      Uporabite z izredno previdnostjo.
 network:
   3000/tcp: Spletni vmesnik (brez Home Assistant)
