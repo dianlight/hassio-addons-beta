@@ -5,6 +5,12 @@ configuration:
     description: >-
       Zvolte, jak se SRAT (Samba REST Administration Tool) aktualizuje: none,
       release, prerelease nebo develop.
+  auto_update:
+    name: Automatické aktualizace
+    description: >-
+      Automaticky stahovat a instalovat aktualizace SRAT, když jsou k dispozici
+      na vybraném kanálu aktualizací. Vyžaduje nastavení srat_update_channel
+      na jinou hodnotu než 'none'.
   log_level:
     name: Úroveň logování
     description: >-
@@ -16,15 +22,23 @@ configuration:
       Při povolení je webové rozhraní dostupné bez přihlášení. Používejte jen v
       důvěryhodných sítích.
   disable_ipv6:
-    name: Disable IPv6 stack
+    name: Zakázat IPv6 zásobník
     description: >-
-      When enabled (default), the add-on disables IPv6 and forces services to
-      bind to IPv4 only. Set to false to allow IPv6.
+      Pokud je povoleno (výchozí), doplněk zakáže IPv6 a donutí služby,
+      aby se vázaly pouze na IPv4. Nastavte na false pro povolení IPv6.
   clean_upgrade_dir:
     name: Vyčistit složku aktualizací
     description: >-
       Odebere všechny stažené binární aktualizace SRAT ze složky dat doplňku.
       Používejte pouze v nouzových situacích k vyčištění poškozených aktualizačních
       souborů. Tato akce je trvalá a nelze ji vrátit zpět.
+  factory_reset:
+    name: Tovární reset
+    description: >-
+      ⚠️ NEBEZPEČÍ - DESTRUKTIVNÍ AKCE ⚠️ Provádí kompletní tovární reset smazáním
+      SQL databáze, všech konfigurací, nastavení a souborů aktualizací. Tímto
+      trvale smažete všechny konfigurace sdílení Samba, uživatelské účty, hesla
+      a vlastní nastavení. Doplněk se restartuje s výchozím nastavením. Tato akce
+      je nevratná a nelze ji vrátit zpět. Používejte s maximální opatrností.
 network:
   3000/tcp: Webové rozhraní (bez Home Assistant)

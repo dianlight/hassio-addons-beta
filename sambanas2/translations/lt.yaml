@@ -5,6 +5,12 @@ configuration:
     description: >-
       Pasirinkite, kaip SRAT (Samba REST Administration Tool) atnaujinamas:
       none, release, prerelease arba develop.
+  auto_update:
+    name: Automatiniai atnaujinimai
+    description: >-
+      Automatiškai atsisiųsti ir įdiegti SRAT atnaujinimus, kai jie pasiekiami
+      pasirinktame atnaujinimų kanale. Reikalauja, kad srat_update_channel būtų
+      nustatytas į ką nors kita nei 'none'.
   log_level:
     name: Žurnalo lygis
     description: >-
@@ -16,15 +22,24 @@ configuration:
       Įjungus, žiniatinklio sąsaja prieinama be prisijungimo. Naudokite tik
       patikimuose tinkluose.
   disable_ipv6:
-    name: Disable IPv6 stack
+    name: Išjungti IPv6 krūvą
     description: >-
-      When enabled (default), the add-on disables IPv6 and forces services to
-      bind to IPv4 only. Set to false to allow IPv6.
+      Kai įjungta (numatytasis), papildinys išjungia IPv6 ir priverčia paslaugas
+      susieti tik su IPv4. Nustatykite false, kad leistumėte IPv6.
   clean_upgrade_dir:
     name: Išvalyti atnaujinimo katalogą
     description: >-
       Pašalina visus atsisiųstus SRAT dvejetainių failų atnaujinimus iš priedo
       duomenų katalogo. Naudokite tik ekstremaliose situacijose, kad išvalytumėte
       sugadintus atnaujinimo failus. Šis veiksmas yra galutinis ir negalimas atšaukti.
+  factory_reset:
+    name: Gamyklinis atstatymas
+    description: >-
+      ⚠️ PAVOJUS - NAIKINAMA VEIKLA ⚠️ Atlieka visišką gamyklinį atstatymą ištrinant
+      SQL duomenų bazę, visas konfigūracijas, nustatymus ir atnaujinimo failus.
+      Tai nuolat ištrins visas Samba bendrinimo konfigūracijas, vartotojų paskyras,
+      slaptažodžius ir pasirinktinius nustatymus. Priedas bus paleistas iš naujo su
+      numatytaisiais nustatymais. Šis veiksmas yra neatitaisomas ir negali būti
+      atliktas atšauktas. Naudokite su didelės atsargumo.
 network:
   3000/tcp: Žiniatinklio sąsaja (be Home Assistant)

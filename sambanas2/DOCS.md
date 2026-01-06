@@ -113,9 +113,11 @@ Example configuration with all available options and their default values:
 
 ```yaml
 srat_update_channel: none
+auto_update: true
 log_level: warning
 disable_ipv6: true
 leave_front_door_open: false
+factory_reset: false
 ```
 
 **Note**: All configuration options are optional. Only specify options when you want to change the default value.
@@ -132,6 +134,18 @@ The `log_level` option controls the verbosity of log output from the add-on, whi
 - **fatal**: Shows critical failures that make the add-on unusable.
 
 Each level automatically includes log messages from more severe levels (e.g., `debug` also shows `info` messages). The default setting is `info`, which is recommended unless you are troubleshooting.
+
+
+### Option: `auto_update` (optional)
+
+Controls whether SRAT updates are automatically downloaded and installed when a new version is available on the selected update channel.
+
+- `true` (default): Automatically download and install SRAT updates when available
+- `false`: Do not automatically download or install updates (manual updates only)
+
+This option works in conjunction with `srat_update_channel`. When `auto_update` is set to `true` and `srat_update_channel` is set to anything other than `none`, the add-on will check for and automatically install updates from the selected channel. If `auto_update` is `false`, updates will not be downloaded or applied automatically, even if an update channel is configured.
+
+Defaults to `true`.
 
 
 ### Option: `disable_ipv6` (optional)
@@ -164,6 +178,33 @@ Defaults to `none`.
 When enabled (set to `true`), this option removes all downloaded binary updates from the add-on's data directory. Use this only in emergency situations if you need to clear out old or corrupted SRAT update files.
 
 ⚠️ **Warning**: This action is permanent and cannot be undone. Only enable this if you fully understand the consequences.
+
+Defaults to `false`.
+
+### Option: `factory_reset` (optional)
+
+⚠️ **DANGER - DESTRUCTIVE ACTION** ⚠️
+
+When enabled (set to `true`), this option performs a complete factory reset of the add-on by:
+
+1. **Deleting the SQL database** (`/config/config.db3`) and all database backups
+2. **Removing all SRAT configurations and settings**
+3. **Cleaning the upgrade directory** (same as enabling `clean_upgrade_dir`)
+4. **Resetting itself to `false`** after completion
+
+This will **permanently delete**:
+- All Samba share configurations
+- All user accounts and passwords
+- All custom settings and preferences
+- The entire SRAT database
+- All downloaded update files
+
+After the factory reset:
+- The add-on will restart with completely default settings
+- You will need to reconfigure everything from scratch
+- All previous configurations will be lost and cannot be recovered
+
+🔴 **USE WITH EXTREME CAUTION**: This action is irreversible. Make sure you have backups of any important configurations before enabling this option.
 
 Defaults to `false`.
 

@@ -5,6 +5,12 @@ configuration:
     description: >-
       Scegli come SRAT (Samba REST Administration Tool) si aggiorna: none,
       release, prerelease o develop.
+  auto_update:
+    name: Aggiornamenti automatici
+    description: >-
+      Scarica e installa automaticamente gli aggiornamenti SRAT quando disponibili
+      sul canale di aggiornamento selezionato. Richiede che srat_update_channel
+      sia impostato su qualcosa di diverso da 'none'.
   log_level:
     name: Livello di log
     description: >-
@@ -16,15 +22,24 @@ configuration:
       Se attivato, l'interfaccia web è accessibile senza login. Usare solo su
       reti fidate.
   disable_ipv6:
-    name: Disable IPv6 stack
+    name: Disabilita stack IPv6
     description: >-
-      When enabled (default), the add-on disables IPv6 and forces services to
-      bind to IPv4 only. Set to false to allow IPv6.
+      Quando abilitato (predefinito), l'add-on disabilita IPv6 e forza i servizi
+      a legarsi solo a IPv4. Impostare su false per consentire IPv6.
   clean_upgrade_dir:
     name: Pulisci directory di aggiornamento
     description: >-
       Rimuove tutti gli aggiornamenti binari SRAT scaricati dalla directory dati
       dell'add-on. Usare solo in situazioni di emergenza per eliminare file di
       aggiornamento corrotti. Questa azione è permanente e irreversibile.
+  factory_reset:
+    name: Ripristino di fabbrica
+    description: >-
+      ⚠️ PERICOLO - AZIONE DISTRUTTIVA ⚠️ Esegue un ripristino completo di fabbrica
+      eliminando il database SQL, tutte le configurazioni, le impostazioni e i file
+      di aggiornamento. Questo cancellerà permanentemente tutte le configurazioni
+      di condivisione Samba, gli account utente, le password e le impostazioni personalizzate.
+      L'add-on si riavvierà con le impostazioni predefinite. Questa azione è irreversibile
+      e non può essere annullata. Utilizzare con estrema cautela.
 network:
   3000/tcp: Interfaccia web (senza Home Assistant)
