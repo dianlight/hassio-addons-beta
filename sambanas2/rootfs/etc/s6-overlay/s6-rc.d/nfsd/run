@@ -10,7 +10,7 @@ set -euo pipefail
 EXPORTS_FILE="${EXPORTS_FILE:-/etc/exports}"
 NFS_THREADS="${NFS_THREADS:-8}"
 NFS_ENABLE_VERSIONS="${NFS_ENABLE_VERSIONS:-4 4.1 4.2}"
-NFS_DISABLE_VERSIONS="${NFS_DISABLE_VERSIONS:-2 3}"
+NFS_DISABLE_VERSIONS="${NFS_DISABLE_VERSIONS:-3}"
 STATD_PID_FILE="/run/nfsd.statd.pid"
 IDMAPD_PID_FILE="/run/nfsd.idmapd.pid"
 
@@ -26,6 +26,25 @@ build_nfsd_version_flags() {
   done
 
   printf '%s\n' "${flags[@]}"
+}
+
+mountd_debug_level() {
+  local level
+
+  level="$(bashio::config 'log_level' 'info')"
+  case "${level}" in
+    trace) echo 7 ;;
+    debug) echo 6 ;;
+    info) echo 5 ;;
+    notice) echo 4 ;;
+    warning) echo 3 ;;
+    error) echo 2 ;;
+    fatal) echo 1 ;;
+    *)
+      bashio::log.warning "rpc.mountd: Unknown log_level '${level}'; defaulting to warning."
+      echo 3
+      ;;
+  esac
 }
 
 ensure_rpcbind() {
@@ -77,6 +96,7 @@ read -r -a NFS_VERSION_FLAGS <<<"$(build_nfsd_version_flags)"
 
 while true; do
   bashio::log.info "Starting rpc.nfsd (threads=${NFS_THREADS}) enable=[${NFS_ENABLE_VERSIONS}] disable=[${NFS_DISABLE_VERSIONS}]"
+  bashio::log.debug "NFS version flags: ${NFS_VERSION_FLAGS[@]}"
 
   if ! rpc.nfsd "${NFS_THREADS}" "${NFS_VERSION_FLAGS[@]}"; then
     bashio::log.error "rpc.nfsd failed to start (threads=${NFS_THREADS}); retrying in 10s."
@@ -92,5 +112,8 @@ while true; do
   fi
 
   bashio::log.info "NFS services started using ${EXPORTS_FILE}"
-  exec rpc.mountd -F --manage-gids
+  MOUNTD_DEBUG_LEVEL="$(mountd_debug_level)"
+  bashio::log.debug "rpc.mountd debug level: ${MOUNTD_DEBUG_LEVEL}"
+  exec s6-notifyoncheck -c "showmount -e localhost >/dev/null 2>&1" \
+    rpc.mountd -F --manage-gids -d "${MOUNTD_DEBUG_LEVEL}"
 done
