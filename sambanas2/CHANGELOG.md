@@ -1,6 +1,6 @@
 # Changelog
 
-## 2026.2.0-dev [ 🚧 Unreleased ]
+## 2026.1.0-dev [ 🚧 Unreleased ]
 
 ### 🙏 Thanks
 
@@ -39,7 +39,7 @@
 - Improve the logging system 
 
 
-### 🐭 Features from SRAT [v2026.2.0-dev.2](https://github.com/dianlight/srat)
+### 🐭 Features from SRAT [v2026.2.0-dev.0](https://github.com/dianlight/srat)
 
 #### 🙏 Thanks
 
