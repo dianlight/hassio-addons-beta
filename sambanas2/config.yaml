@@ -1,6 +1,6 @@
 ---
 name: Samba NAS2-β
-version: 2026.2.0-beta.157
+version: 2026.3.0-beta.158
 slug: sambanas2
 description: Expose Home Assistant disc with SMB/CIFS
 url: https://github.com/dianlight/hassio-addons/tree/master/sambanas2
@@ -10,14 +10,14 @@ arch:
 startup: application
 #webui: http://[HOST]:[PORT:3000]/static/index.html
 #watchdog: http://[HOST]:[PORT:3000]/api/status   # Tema porta dinamica
-watchdog: tcp://[HOST]:[PORT:445]
+#watchdog: tcp://[HOST]:[PORT:445]
 ports:
   3000/tcp: null
   3702/udp: 3702
   5357/tcp: 5357
 ports_description:
   3000/tcp: Web interface
-  3702/udp: WS Discovery (ZeroConf)
+  3702/udp: WS Discovery for auto-discovery in Home Assistant
   5357/tcp: Wsdapi interface
 ingress: true
 ingress_port: 0 # For add-ons on host network
@@ -26,6 +26,7 @@ ingress_stream: true
 panel_icon: mdi:folder-network
 panel_title: Samba NAS2
 panel_admin: true
+discovery: ["srat"]
 boot: auto
 init: false
 hassio_api: true
