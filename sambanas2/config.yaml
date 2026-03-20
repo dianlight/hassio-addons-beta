@@ -1,6 +1,6 @@
 ---
 name: Samba NAS2-β
-version: 2026.3.0-beta.161
+version: 2026.3.0-beta.158
 slug: sambanas2
 description: Expose Home Assistant disc with SMB/CIFS
 url: https://github.com/dianlight/hassio-addons/tree/master/sambanas2
@@ -15,14 +15,10 @@ ports:
   3000/tcp: null
   3702/udp: 3702
   5357/tcp: 5357
-  443/udp: 443
-  445/tcp: 445
 ports_description:
   3000/tcp: Web interface
   3702/udp: WS Discovery for auto-discovery in Home Assistant
   5357/tcp: Wsdapi interface
-  443/udp: SMB over QUIC
-  445/tcp: SMB/CIFS
 ingress: true
 ingress_port: 0 # For add-ons on host network
 ingress_entry: index.html
@@ -53,7 +49,6 @@ options:
   disable_ipv6: true
   clean_upgrade_dir: false
   factory_reset: false
-  use_external_kernel_modules: false
 schema:
   srat_update_channel: list(none|release|prerelease)?
   auto_update: bool?
@@ -62,7 +57,6 @@ schema:
   disable_ipv6: bool?
   clean_upgrade_dir: bool?
   factory_reset: bool?
-  use_external_kernel_modules: bool?
 image: dianlight/{arch}-addon-sambanas2
 udev: true
 #usb: true
