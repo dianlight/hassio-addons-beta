@@ -1,6 +1,6 @@
 # Changelog
 
-## 2026.3.0-dev [ 🚧 Unreleased ]
+## 2026.2.0-dev [ 🚧 Unreleased ]
 
 ### 🙏 Thanks
 
@@ -12,16 +12,13 @@
 - ***Your existing configuration will be lost when updating to this version. Please backup your configuration before updating.***
 - ***If you need HDIdle support don't update and wait next releases.***
 
-#### 💥 Breaking Changes (from SambaNas addon)
-- New configuration format (See [DOCS](DOCS.md) )
+#### 💥 Breaking Changes
 - Remove support to armv7 architecture
 - Remove HDIdle support (for now is added back in future releases)
 - Remove Avahi/mDNS support (due to side effects on some systems)
 
-###  ✨ Features (from SambaNas addon)
+###  ✨ Features
 - Brand New icon and logo AI Generated
-- New option `use_external_kernel_modules` (default: false) to downloads extra kernel modules from
-[https://github.com/dianlight/hasos_more_modules](https://github.com/dianlight/hasos_more_modules) (See [DOCS](DOCS.md) )
 - New option `srat_update_channel`to manage SRAT Update (EXPERIMENTAL [DOCS](DOCS.md) )
 - New option `auto_update` (default: true) to automatically download and install SRAT updates
 - New option `factory_reset` (default: false) to delete all configurations, settings, and database (See [DOCS](DOCS.md) )
@@ -33,8 +30,16 @@
 - Experimental NFS server support via s6; exports auto-managed by SRAT for Media/Backup/Share share types (internal HA-addon use only)
 
 ### 🏗 Chore
+- Fork SambaNas to the new SambaNas2 addon
+- New version model based on year.month.patch
+- Samba to 4.23.1 compatibility 
+- Update base image to latest Home Assistant base image 19.0.0
+- Update the documentation
+- Refactor the code to use less resources and be more efficient
+- Improve the logging system 
 
-### 🐭 Features from SRAT [v2026.3.0-dev.3](https://github.com/dianlight/srat)
+
+### 🐭 Features from SRAT [v2026.3.0-dev.0](https://github.com/dianlight/srat)
 
 > **Note**: This section tracks development progress and changes planned for the first Release Candidate (RC). The final release notes will be organized and consolidated once the RC is ready for public testing.
 
