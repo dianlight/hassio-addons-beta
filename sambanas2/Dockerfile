@@ -267,10 +267,8 @@ RUN apk add --no-cache \
     xz \
     ngtcp2  \
     kmod \
-    && apk add --no-cache \
-    --repository=https://dl-cdn.alpinelinux.org/alpine/edge/main \
-    --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community \
-    zfs
+    zfs \
+    && apk upgrade --no-cache
 
 
 # Install APFS support (not available for armv7)
