@@ -1,6 +1,6 @@
 # Changelog
 
-## 2026.3.0-rc1 [ 🚧 Unreleased ]
+## 2026.4.0-rc2
 
 ### 🙏 Thanks
 
@@ -15,31 +15,17 @@
 - ***Your existing configuration will be lost when updating to this version. Please backup your configuration before updating.***
 - ***If you need HDIdle support don't update and wait next releases.***
 - ***If you need Avahi/mDNS support don't update and wait next releases.***
-- ***If you are using armv7 architecture don't update and wait next releases.***
-
-#### 💥 Breaking Changes (from SambaNas addon)
-- New configuration format (See [DOCS](DOCS.md) )
-- Remove support to armv7 architecture
-- Remove HDIdle support (for now is added back in future releases)
-- Remove Avahi/mDNS support (due to side effects on some systems)
-
-###  ✨ Features (from SambaNas addon)
-- Brand New icon and logo AI Generated
-- New option `use_external_kernel_modules` (default: false) to downloads extra kernel modules from
-[https://github.com/dianlight/hasos_more_modules](https://github.com/dianlight/hasos_more_modules) (See [DOCS](DOCS.md) )
-- New option `srat_update_channel`to manage SRAT Update (EXPERIMENTAL [DOCS](DOCS.md) )
-- New option `auto_update` (default: true) to automatically download and install SRAT updates
-- New option `factory_reset` (default: false) to delete all configurations, settings, and database (See [DOCS](DOCS.md) )
-- New UI (SRAT) to read and control the addon. (See [SRAT Repository](https://github.com/dianlight/srat) )
-- Support Wsdd-native for better Windows Discovery (Remove WSDD and WSDD2 due to instability)
-- Automatic modprobe for all kernel fs
-- Add ability to use Custom Samba Version - Custom Build Only 
-- Add new IPv6 disable option to disable IPv6 stack inside the addon (See [DOCS](DOCS.md) )
-- Experimental NFS server support via s6; exports auto-managed by SRAT for Media/Backup/Share share types (internal HA-addon use only)
+- ***If you are using armv7 architecture don't update, the architecture is not supported.***
 
 ### 🏗 Chore
 
-### 🐭 Features from SRAT [v2026.3.0-dev.3](https://github.com/dianlight/srat)
+- General code refactor and cleanup
+- Update dependencies and base image
+- Add more logging and error handling
+- Add more documentation and examples
+- Add more tests and CI/CD pipelines
+
+### 🐭 Features from SRAT [v2026.4.0-rc2](https://github.com/dianlight/srat)
 
 > **Note**: This section tracks development progress and changes planned for the first Release Candidate (RC). The final release notes will be organized and consolidated once the RC is ready for public testing.
 
@@ -54,9 +40,33 @@ With your donations, we are able to continue developing and improving this proje
 
 #### ✨ Features
 
+- **Interface IP Resolution**: Samba configuration now resolves network interface names to IP addresses at generation time, ensuring IPv4 preference is honored. The `--ipv4-only` CLI flag allows disabling IPv6 addresses in the `interfaces` directive. This prevents issues where interface names could resolve to IPv6 addresses, causing connectivity problems when IPv4 is preferred.
 - **HACS Custom Component**: Added a Home Assistant custom component (`custom_components/srat/`) compatible with HACS for direct integration with Home Assistant. Supports UI configuration wizard, Supervisor add-on autodiscovery via slug whitelist, WebSocket-based real-time updates, and exposes sensors compatible with the existing SRAT HA integration (samba status, process status, volume status, disk health, per-disk I/O, and per-partition health). Includes full test suite using `pytest-homeassistant-custom-component` and Python code quality tooling (ruff, mypy) integrated into CI. *Early internal implementation serving as the foundation for upcoming releases.*
-
-#### 🧑‍🏫 Documentation
+- **Report Issue on GitHub**: Added new "Report Issue" functionality allowing users to easily create GitHub issues with automated diagnostic data collection:
+  - Button in top navigation bar to open issue reporting dialog
+  - Problem type selector (Frontend UI, HA Integration, Addon, or Samba problems)
+  - Markdown-compatible description field
+  - Optional data collection: contextual data (URL, navigation history, browser info, console errors), addon logs, and sanitized SRAT configuration
+  - Automatic routing to appropriate repository (dianlight/srat or dianlight/hassos-addon) based on problem type
+  - Pre-populated GitHub issue URL with diagnostic information
+  - Downloads diagnostic files for attachment to the issue
+- **Autoupdate with Signature Verification (#358)**: Implemented a new autoupdate mechanism using minio/selfupdate with cryptographic signature verification:
+  - Added `--auto-update` flag to automatically download and apply updates without user acceptance
+  - Updates are signed with minisign (Ed25519) signatures for security
+  - Automatic restart when running under s6 supervision
+  - Public key is embedded in the binary for signature verification
+  - Build workflow automatically signs all release binaries
+- **Allow Guest Setting**: Added new `Allow Guest` boolean setting in Settings → General section to enable anonymous guest access to Samba shares. When enabled, configures Samba with `guest account = nobody` and `map to guest = Bad User` for secure guest authentication.
+- **Enhanced SMART Service [#234](https://github.com/dianlight/srat/issues/234)**: Implemented comprehensive SMART disk monitoring and control features including health assessment, temperature monitoring, and attribute tracking.
+- **SMB over QUIC Support [#227](https://github.com/dianlight/srat/issues/227)**: Added comprehensive support for SMB over QUIC transport protocol with intelligent system detection and automatic fallback to TCP when QUIC is unavailable.
+- **Autoupdate Service**: Implemented a back-end service for automatic updates from GitHub releases, with support for multiple channels (stable, beta, dev) and local development builds.
+- **Telemetry Configuration**: Added UI in Settings to configure telemetry modes (Rollbar error tracking), dependent on internet connectivity and user consent.
+- **Volume Mount Intelligence**: Enriched volume mount structs with partition and filesystem metadata to enable informed NFS vs CIFS export decisions and implemented proper volume-event handling for cache retry and invalidation. ([#500](https://github.com/dianlight/srat/issues/500))
+- **Bidirectional Home Assistant WebSocket**: Introduced client-to-server WebSocket messaging, starting with a `helo` handshake that allows the custom component to announce its identity and version to the backend. ([#508](https://github.com/dianlight/srat/issues/508))
+- **Disable SMART Integration Setting**: Added a new setting to disable SMART integration, helping mitigate excessive disk wake-ups in sleeping-disk scenarios. ([#499](https://github.com/dianlight/srat/issues/499))
+- **Home Assistant Repairs Proxy Service**: Implemented a backend service to manage Home Assistant repairs via the custom component, with queued commands and lifecycle synchronization over WebSocket. ([#518](https://github.com/dianlight/srat/issues/518))
+- **Overlay Helper System Improvements**: Refactored the TourEvents system for better accuracy and type safety, added comprehensive tests, and established frontend maintenance guidelines. ([#515](https://github.com/dianlight/srat/issues/515))
+- Add repair service and proxy for Home Assistant integration
 
 #### 🐛 Bug Fixes
 
@@ -86,34 +96,16 @@ With your donations, we are able to continue developing and improving this proje
   - Replaced all `pointer.Bool/String/Int/Uint64/Of/Any()` calls with Go 1.26's built-in `new(expr)` syntax (~268 occurrences) and removed the `xorcare/pointer` dependency
   - Replaced all `interface{}` with `any` alias (147 occurrences) following Go modernizer patterns
   - Replaced `sync.WaitGroup` `Add(1)/Done()` patterns with `WaitGroup.Go()` method in production code
+- **TypeScript 6.0 Final Migration**: Updated frontend TypeScript configuration for compatibility with TypeScript 6.0 final (March 23, 2026) and preparation for TypeScript 7.0 (Go-based):
+  - Removed all deprecated compiler flags (`experimentalDecorators`, `useDefineForClassFields`, `baseUrl`, `outFile`)
+  - Updated ECMAScript target from ES2021 to ES2022 for better modern feature alignment
+  - Enabled `noImplicitOverride` strict flag (code already compliant)
+  - Code optimizations leveraging TS 6.0 improved type inference (removed 11 unnecessary type assertions)
+  - Updated `peerDependencies` to support TypeScript 6.0 final
+  - Created comprehensive migration guide (`frontend/TYPESCRIPT_MIGRATION.md`) documenting completed work and remaining tasks for full TS 7.0 readiness
+  - Project uses `@typescript/native-preview` (tsgo) for type checking
+  - TypeScript 6.0 final is the last JavaScript-based version before the Go-native 7.0 compiler
 - Updated dependencies to latest versions to ensure security and compatibility.
-
-#### ✨ Features
-
-- **Report Issue on GitHub**: Added new "Report Issue" functionality allowing users to easily create GitHub issues with automated diagnostic data collection:
-  - Button in top navigation bar to open issue reporting dialog
-  - Problem type selector (Frontend UI, HA Integration, Addon, or Samba problems)
-  - Markdown-compatible description field
-  - Optional data collection: contextual data (URL, navigation history, browser info, console errors), addon logs, and sanitized SRAT configuration
-  - Automatic routing to appropriate repository (dianlight/srat or dianlight/hassos-addon) based on problem type
-  - Pre-populated GitHub issue URL with diagnostic information
-  - Downloads diagnostic files for attachment to the issue
-- **Autoupdate with Signature Verification (#358)**: Implemented a new autoupdate mechanism using minio/selfupdate with cryptographic signature verification
-  - Added `--auto-update` flag to automatically download and apply updates without user acceptance
-  - Updates are signed with minisign (Ed25519) signatures for security
-  - Automatic restart when running under s6 supervision
-  - Public key is embedded in the binary for signature verification
-  - Build workflow automatically signs all release binaries
-- **Allow Guest Setting**: Added new `Allow Guest` boolean setting in Settings → General section to enable anonymous guest access to Samba shares. When enabled, configures Samba with `guest account = nobody` and `map to guest = Bad User` for secure guest authentication.
-- **Enhanced SMART Service [#234](https://github.com/dianlight/srat/issues/234)**: Implemented comprehensive SMART disk monitoring and control features:
-- **SMB over QUIC Support [#227](https://github.com/dianlight/srat/issues/227)**: Added comprehensive support for SMB over QUIC transport protocol with intelligent system detection
-- **Autoupdate Service**: Implemented a back-end service for automatic updates from GitHub releases, with support for multiple channels and local development builds.
-- **Telemetry Configuration**: Added UI in Settings to configure telemetry modes, dependent on internet connectivity.
-- Manage `local master` option (?)
-- Add Rollbar telemetry service for error tracking and monitoring
-- Help screen or overlay help/tour [#82](https://github.com/dianlight/srat/issues/82)
-- Smart Control [#100](https://github.com/dianlight/srat/issues/100)
-- HDD Spin down [#101](https://github.com/dianlight/srat/issues/101)
 
 #### 🏗 Chore
 
@@ -121,3 +113,29 @@ With your donations, we are able to continue developing and improving this proje
 - Align UI elements to HA [#81](https://github.com/dianlight/srat/issues/81)
 - Create the base documentation [#80](https://github.com/dianlight/srat/issues/80)
 - Display version from ADDON
+## 2026.3.0-rc1
+
+#### 💥 Breaking Changes (from SambaNas addon)
+- New configuration format (See [DOCS](DOCS.md) )
+- Remove support to armv7 architecture
+- Remove HDIdle support (for now is added back in future releases)
+- Remove Avahi/mDNS support (due to side effects on some systems)
+
+###  ✨ Features (from SambaNas addon)
+- Brand New icon and logo AI Generated
+- New option `use_external_kernel_modules` (default: false) to downloads extra kernel modules from
+[https://github.com/dianlight/hasos_more_modules](https://github.com/dianlight/hasos_more_modules) (See [DOCS](DOCS.md) )
+- New option `srat_update_channel`to manage SRAT Update (EXPERIMENTAL [DOCS](DOCS.md) )
+- New option `auto_update` (default: true) to automatically download and install SRAT updates
+- New option `factory_reset` (default: false) to delete all configurations, settings, and database (See [DOCS](DOCS.md) )
+- New UI (SRAT) to read and control the addon. (See [SRAT Repository](https://github.com/dianlight/srat) )
+- Support Wsdd-native for better Windows Discovery (Remove WSDD and WSDD2 due to instability)
+- Automatic modprobe for all kernel fs
+- Add ability to use Custom Samba Version - Custom Build Only 
+- Add new IPv6 disable option to disable IPv6 stack inside the addon (See [DOCS](DOCS.md) )
+- Experimental NFS server support via s6; exports auto-managed by SRAT for Media/Backup/Share share types (internal HA-addon use only)
+
+### 🏗 Chore
+
+
+[docs]: https://github.com/dianlight/hassio-addons/blob/master/sambanas2/DOCS.md

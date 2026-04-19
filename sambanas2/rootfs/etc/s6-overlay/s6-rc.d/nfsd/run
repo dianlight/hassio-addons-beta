@@ -5,7 +5,10 @@
 # Start NFS server stack under s6 supervision
 # Exports are automatically managed by SRAT for HA storage directories
 # ============================================================================
-set -uo pipefail
+set -euo pipefail
+exec 2>&1
+trap 'bashio::log.error "nfsd/run failed at line ${BASH_LINENO[0]} (exit code: ${?})"' ERR
+
 
 EXPORTS_FILE="${EXPORTS_FILE:-/etc/exports}"
 NFS_THREADS="${NFS_THREADS:-8}"
@@ -107,7 +110,7 @@ while true; do
     continue
   fi
 
-  if ! exportfs -r; then
+  if ! exportfs -ar; then
     bashio::log.error "Failed to apply exports from ${EXPORTS_FILE}; retrying in 10s."
     rpc.nfsd 0 || true
     sleep 10
