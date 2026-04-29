@@ -70,7 +70,7 @@ jobs:
               with:
                   architectures: ${{ env.ARCHITECTURES }}
                   image-name: addon-${{ steps.extract_branch.outputs.BR_PROJECT }}
-                  registry-prefix: dianlight
+                  registry-prefix: ghcr.io/dianlight
 
     build:
         name: Build ${{ matrix.arch }} image
@@ -123,4 +123,4 @@ jobs:
                   image-tags: |
                       ${{ needs.init.outputs.version }}
                       latest
-                  registry-prefix: dianlight
+                  registry-prefix: ghcr.io/dianlight
