@@ -5,40 +5,62 @@ on:
         branches:
             - master
     workflow_dispatch:
+        inputs:
+            addon:
+                description: 'Addon name (leave empty to derive from branch)'
+                required: false
+                default: ''
 
 permissions:
-  contents: read
-  pull-requests: write
+    contents: read
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
 
 env:
-  ARCHITECTURES: '["amd64", "aarch64"]'
+    ARCHITECTURES: '["amd64", "aarch64"]'
 
 jobs:
     init:
         name: Initialize build
         if: github.event_name == 'workflow_dispatch' || github.event.pull_request.draft == false
         runs-on: ubuntu-latest
+        permissions:
+            contents: read
         outputs:
             matrix: ${{ steps.matrix.outputs.matrix }}
             addon: ${{ steps.extract_branch.outputs.BR_PROJECT }}
             version: ${{ steps.version.outputs.VERSION }}
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
               with:
                   submodules: true
 
             - name: Extract addon name from branch
               id: extract_branch
+              env:
+                  ADDON_INPUT: ${{ github.event.inputs.addon }}
               shell: bash
               run: |
-                  REF="${{ github.head_ref || github.ref_name }}"
-                  echo "BR_PROJECT=${REF##*/}" >> "$GITHUB_OUTPUT"
+                  if [[ -n "${ADDON_INPUT}" ]]; then
+                      echo "BR_PROJECT=${ADDON_INPUT}" >> "$GITHUB_OUTPUT"
+                  else
+                      REF="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
+                      echo "BR_PROJECT=${REF##*/}" >> "$GITHUB_OUTPUT"
+                  fi
 
             - name: Get version from config
               id: version
+              env:
+                  BR_PROJECT: ${{ steps.extract_branch.outputs.BR_PROJECT }}
               shell: bash
               run: |
-                  VERSION=$(grep '^version:' ${{ steps.extract_branch.outputs.BR_PROJECT }}/config.yaml | awk '{print $2}')
+                  VERSION=$(grep '^version:' "${BR_PROJECT}/config.yaml" | awk '{print $2}')
+                  if [[ -z "${VERSION}" ]]; then
+                      echo "Error: could not read version from ${BR_PROJECT}/config.yaml" >&2
+                      exit 1
+                  fi
                   echo "VERSION=${VERSION}" >> "$GITHUB_OUTPUT"
 
             - name: Get build matrix
@@ -55,11 +77,12 @@ jobs:
         runs-on: ${{ matrix.os }}
         permissions:
             contents: read
+            packages: write
         strategy:
             fail-fast: false
             matrix: ${{ fromJSON(needs.init.outputs.matrix) }}
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
               with:
                   submodules: true
 
@@ -67,9 +90,9 @@ jobs:
               uses: home-assistant/builder/actions/build-image@2026.03.2
               with:
                   arch: ${{ matrix.arch }}
-                  container-registry: docker.io
-                  container-registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
-                  container-registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
+                  container-registry: ghcr.io
+                  container-registry-username: ${{ github.actor }}
+                  container-registry-password: ${{ secrets.GITHUB_TOKEN }}
                   context: ${{ needs.init.outputs.addon }}
                   cosign: "false"
                   image: ${{ matrix.image }}
@@ -83,14 +106,17 @@ jobs:
         name: Publish multi-arch manifest
         needs: [init, build]
         runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            packages: write
         steps:
             - name: Publish multi-arch manifest
               uses: home-assistant/builder/actions/publish-multi-arch-manifest@2026.03.2
               with:
                   architectures: ${{ env.ARCHITECTURES }}
-                  container-registry: docker.io
-                  container-registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
-                  container-registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
+                  container-registry: ghcr.io
+                  container-registry-username: ${{ github.actor }}
+                  container-registry-password: ${{ secrets.GITHUB_TOKEN }}
                   cosign: "false"
                   image-name: addon-${{ needs.init.outputs.addon }}
                   image-tags: |
