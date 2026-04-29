@@ -1,6 +1,6 @@
 # Changelog
 
-## 2026.4.0-rc2
+## 2026.4.0-rc3
 
 ### 🙏 Thanks
 
@@ -10,33 +10,23 @@
 ### 🚨 Notes
 - This is a release candidate version, it may contain bugs and issues. Use it at your own risk. It is not recommended to use this version in production environments.
 - This version is not compatible with the previous SambaNas addon, it is a complete rewrite and refactor of the addon. It is recommended to backup your configuration before updating to this version.
-- This version is only compatible with Home Assistant OS and Supervised installations, it is not compatible with Home Assistant Core or Container installations.
-- This has been a big refactor to make the addon more efficient and use less resources. Some features have been removed or changed to improve stability and performance. Some will be added back in future releases.
+- This version is only tested with Home Assistant OS and Supervised installations. It may not work properly with Home Assistant Core or Container installations.
 - ***Your existing configuration will be lost when updating to this version. Please backup your configuration before updating.***
-- ***If you need HDIdle support don't update and wait next releases.***
-- ***If you need Avahi/mDNS support don't update and wait next releases.***
-- ***If you are using armv7 architecture don't update, the architecture is not supported.***
+- ***If you need HDIdle support don't update and wait future releases.***
+- ***If you need Avahi/mDNS support don't update and wait future releases.***
 
-### 🏗 Chore
+### 💥 Breaking Changes
 
-- General code refactor and cleanup
-- Update dependencies and base image
-- Add more logging and error handling
-- Add more documentation and examples
-- Add more tests and CI/CD pipelines
+- **Container registry changed**: images are now published to `ghcr.io/dianlight/` (GitHub Container Registry) instead of `docker.io/dianlight/` (Docker Hub). The addon store URL in Home Assistant must be updated.
+- **Image renamed**: the per-architecture image prefix has been dropped. Old image: `dianlight/{arch}-addon-sambanas2`. New image: `ghcr.io/dianlight/addon-sambanas2`. The multi-arch manifest is resolved automatically; no architecture-specific tag is needed.
+
+### 🔄 Migration Notes
+
+If you are pulling the image directly (outside of HA Supervisor), update your image reference from `docker.io/dianlight/amd64-addon-sambanas2:<tag>` to `ghcr.io/dianlight/addon-sambanas2:<tag>`.
 
 ### 🐭 Features from SRAT [v2026.4.0-rc2](https://github.com/dianlight/srat)
 
 > **Note**: This section tracks development progress and changes planned for the first Release Candidate (RC). The final release notes will be organized and consolidated once the RC is ready for public testing.
-
-#### 🙏 Thanks
-
-We would like to thank all supporters for their contributions and donations.
-With your donations, we are able to continue developing and improving this project. Your support is greatly appreciated.
-
-#### 📅 Roadmap
-
-- **Release Candidate (RC) Planned for March**: The first release candidate version is scheduled for March. This RC will stabilize the codebase, finalize the API, and provide a feature-complete version for community testing and feedback before the official stable release.
 
 #### ✨ Features
 
@@ -113,6 +103,18 @@ With your donations, we are able to continue developing and improving this proje
 - Align UI elements to HA [#81](https://github.com/dianlight/srat/issues/81)
 - Create the base documentation [#80](https://github.com/dianlight/srat/issues/80)
 - Display version from ADDON
+
+
+## 2026.4.0-rc2
+
+### 🏗 Chore
+
+- General code refactor and cleanup
+- Update dependencies and base image
+- Add more logging and error handling
+- Add more documentation and examples
+- Add more tests and CI/CD pipelines
+
 ## 2026.3.0-rc1
 
 #### 💥 Breaking Changes (from SambaNas addon)
