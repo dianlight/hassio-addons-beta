@@ -1,11 +1,57 @@
 # Changelog
 
-## 2026.8.0-rc12
+## 2026.9.0-rc14
 
 ### 🙏 Thanks
 
-- Thanks to all the contributors and users that help to make this addon better.
-- Special thanks to supporters and sponsors. With our support I was able to buy a opencode-go subscription to help me code faster and better.
+- Thanks to all the contributors and users that help to make this app better.
+- Special thanks to supporters and sponsors. With our support I was able to buy an opencode-go subscription to help me code faster and better.
+
+### 🚨 Notes
+- This is a release candidate version, it may contain bugs and issues. Use it at your own risk. It is not recommended to use this version in production environments.
+
+### 🐛 Bug Fixes
+- Improved hardware service stability
+- Fix Docker dev build failure (`libcrypto3`/`libssl3` 3.5.7 vs `openssl` 3.5.8 conflict) by running `apk upgrade --no-cache` before `apk add` in the Samba install stage and builder stages.
+
+### 🐭 Features from SRAT [v2026.9.0-rc14](https://github.com/dianlight/srat)
+
+#### ✨ Features
+
+- **Lab feature registry with maturity tiers**: lab-gated features now flow
+  through a central registry (`GET /api/lab_features`) that assigns each feature
+  an alpha or beta tier and computes availability server-side. Beta features are
+  visible whenever `experimental_lab_mode` is enabled in any build; alpha
+  features (currently the Home Assistant custom-component tools) are exposed
+  only in development and prerelease builds and are unreachable in release
+  builds even with Lab Mode on — enforcement is server-side only, so no
+  frontend environment logic is needed for correctness. The frontend gates
+  lab-gated surfaces — for example the NavBar smb.conf tab, HDIdle badge and
+  disk metrics, HA custom-component panel, NetworkDevicesPanel, SMB over QUIC
+  and add-on mDNS registration — through a single `useLabFeatures()` hook, and
+  HDIdle's `useLabMode()` is now a thin wrapper over it.
+
+#### 🐛 Bug Fixes
+
+- **Colon mount paths rejected with a suggested retry**: mount point paths
+  containing `:` are now rejected up front by a shared `ValidateMountPointPath`
+  check (used by both the DB layer and the volume service) instead of failing
+  later with an obscure error. The 406 response carries a `SuggestedPath` hint
+  with the colon stripped, and the UI confirm dialog offers a one-click retry
+  with the suggested path.
+
+## 2026.8.0-rc13
+
+### 🏗 Chore
+- Update [smartmontools-sdk](https://github.com/dianlight/smartmontools-sdk) to the new monorepo layout and release model: the SDK now ships as native-core releases (version scheme `v<AC_INIT>.<N>`), replacing the retired standalone `v7.5` tag. The release tarball additionally includes the `libsmartmon_go.so` C ABI wrapper shared library.
+- Track the smartmontools-sdk **dev channel**: pin the latest prerelease build `v8.0.2-pre.514` instead of the stable `v8.0.x` line.
+- Add a Renovate custom manager for `SMARTMONTOOLS_SDK_VERSION` so dependency updates are proposed automatically, with prereleases allowed for `dianlight/smartmontools-sdk`.
+
+#### 🐛 Bug Fixes
+- Fix [#729](https://github.com/dianlight/hassio-addons/issues/729) 🐛 [SAMBA NAS2 - beta] Failing to load - Nil pointer in hardwareService
+- Fix [#727](https://github.com/dianlight/hassio-addons/issues/727) ❓ [addon] Upgrade from version 1
+
+## 2026.8.0-rc12
 
 ### 🚨 Notes
 - This is a release candidate version, it may contain bugs and issues. Use it at your own risk. It is not recommended to use this version in production environments.
@@ -33,162 +79,10 @@
 #### 🐛 Bug Fixes
 - Fix [#726](https://github.com/.../issues/726) [Samba NAS2] No way to manually mount disk
 
-
-### 🐭 Features from SRAT [v2026.8.0-rc12](https://github.com/dianlight/srat)
-
-#### ✨ Features
-
-- **mDNS settings simplified — master/proxy model**: `addon_mdns_registration`
-  is renamed to `mdns_registration` and becomes the **master switch** that
-  enables or disables mDNS registration entirely (no longer gated behind
-  `experimental_lab_mode`). The old `mdns_registration` is renamed to
-  `use_component_mdns_proxy` and now selects the implementation: the Home
-  Assistant custom component proxy (default) or SRAT's direct zeroconf
-  registration. The two switches are no longer mutually exclusive — the master
-  switch gates everything, and the proxy switch chooses the implementation.
-  A DB migration converts existing `addon_mdns_registration=true` installs to
-  `mdns_registration=true` + `use_component_mdns_proxy=false`.
-- **App-based shared directory migration**: legacy Supervisor directory names
-  (`addons` / `addon_configs`) are mapped to the new app-based layout
-  (`local_apps` / `app_configs`). A new `standard_share_names` setting
-  (`old` / `new` / `both`) selects which standard share names are exposed, the
-  dashboard shows a deprecation alert for old share names, and `VerifyShare`
-  marks a share unusable when its directory is missing. ([srat#898](https://github.com/dianlight/srat/issues/898))
-- **Resizable left panel on volumes page**: the volumes page left panel is now
-  drag-to-resize between 15–60 % (default 30 %) via a divider handle, with the
-  width preference persisted to `localStorage`.
-- **Visually coherent partition action icons**: `FontAwesomeSvgIcon` forwards
-  `SvgIconProps` for uniform icon sizing, and the compact-menu breakpoint was
-  widened so partition actions wrap cleanly instead of overflowing.
-
-#### 🐛 Bug Fixes
-
-- **Support disks without partitions**: Disks with no partition table (raw "superfloppy" whole-disk filesystems) and filesystems the Home Assistant Supervisor does not report are now visible and mountable. ([srat#849](https://github.com/dianlight/srat/issues/849), [hassio-addons#716](https://github.com/dianlight/hassio-addons/issues/716))
-- **Share validation and user disable corrected**: unusable shares serialize
-  `is_valid:false`, standard directories are verified first with a reachable
-  pre-exec check, invalid share data returns 422 instead of 500/201, and
-  disabling a user now persists `is_valid` while passwords are redacted.
-  ([srat#899](https://github.com/dianlight/srat/issues/899), [srat#900](https://github.com/dianlight/srat/issues/900), [srat#901](https://github.com/dianlight/srat/issues/901), [srat#902](https://github.com/dianlight/srat/issues/902), [srat#903](https://github.com/dianlight/srat/issues/903), [srat#904](https://github.com/dianlight/srat/issues/904))
-- **Partitions missing from supervisor filesystems synthesized**: a fallback
-  probe synthesizes missing child partitions from the parent disk, skipping
-  filesystems the Supervisor already reported to avoid duplicates.
-  ([srat#906](https://github.com/dianlight/srat/issues/906))
-- **Packed SMART attribute values decoded**: packed raw SMART attributes (e.g.
-  `power_on_time.hours` as 64-bit) are now decoded correctly from the smartlib
-  backend, and the top-level `smartctl` temperature takes precedence over the
-  ATA attribute health score.
-- **User API fixes**: `readOnly` / `writeOnly` auth fields are emitted for user
-  accounts, `has_default_password` is exposed for the admin user, the first-run
-  wizard validates users, and legacy standard shares stay valid in the UI.
-
-#### 🏗 Chore
-
-- **Remove addon mDNS interface selection**: addon-side mDNS now requires
-  telemetry and smart modes and no longer exposes an interface whitelist.
-- **Clean up dead UI actions** in the volumes tree view.
-- **Dependency bumps**: complete go-github v90 migration, regenerate enums with
-  goenums v0.7.0, update golang.org/x/net to v0.57.0.
-- **Build fixes**: build the smartlib musl variant dynamically and disable the
-  sanitizer in the zig musl CC step.
-
-
 ## 2026.7.0-rc11
 
 ### 🏗 Chore
 - Update SRAT to v2026.7.0-rc11
-
-### 🐭 Features from SRAT [v2026.7.0-rc11](https://github.com/dianlight/srat)
-
-#### 🔧 Chore
-
-- **Migrate to TypeScript 7.0 RC** (Go-based `tsgo` compiler):
-  - Updated peer dependency to `typescript: ^7.0.1-rc`
-  - Updated `@typescript/native-preview` to `7.0.0-dev.20260701.1`
-  - Updated `tsconfig.json`, migration docs, and instruction files
-  - Patches `esModuleInterop` default and other TS 7.0 defaults
-
-#### ✨ Features
-
-- **HDIdle per-disk model** (Lab Mode feature): Replaced the global HDIdle
-  enable/disable toggle with a fully per-disk configuration model gated behind
-  Lab Mode (`experimental_lab_mode=true`). Key changes:
-  - **Per-disk enable/disable**: each physical disk has its own HDIdle record
-    (`enabled: yes|custom|no`); the service runs automatically when ≥1 disk is
-    enabled. The five global `Settings.hdidle_*` fields have been removed.
-  - **Dashboard suggestion badge**: HDDs that have not yet been configured show
-    an inline "Enable HDIdle?" badge in the disk I/O table (visible only in Lab
-    Mode). The badge provides **Ignore** (persists `suggestion_ignored=true`)
-    and **Enable** (navigates to the per-disk card in the Volumes page).
-  - **Non-rotational guard**: enabling HDIdle on an SSD/NVMe or a device with
-    unknown rotational type opens a confirm dialog; accepting persists
-    `force_enabled=true` so the warning does not repeat. The backend returns
-    HTTP 409 if the flag is missing, preventing accidental spindowns of SSDs.
-  - **Rotational detection**: `Disk.is_rotational` tri-state (HDD/SSD/unknown)
-    is now derived from `/sys/block/<dev>/queue/rotational` (sysfs primary) with
-    SMART `rotation_rate` as fallback. Unknown (e.g. USB enclosures) returns
-    `nil` — treated as non-rotational for safety.
-  - **Ignore-suggestion endpoint**: `POST /api/disk/{id}/hdidle/ignore-suggestion`
-    persists the badge dismissal per disk.
-  - **Adaptive polling**: the monitor goroutine polls every 60s when ≥1 disk is
-    spun-up and slows to 5min when all monitored disks are already spun-down.
-    The goroutine is never started when zero disks are enabled.
-  - **readOnly threading**: the per-disk settings card now correctly propagates
-    the `readOnly` flag from `VolumeDetailsPanel`.
-- **mDNS Registration**: Added optional mDNS registration of the SRAT service for local network discovery. When enabled, the backend registers a `_srat._tcp` service with the system mDNS responder, advertising the service name, port, and metadata. This allows compatible clients to discover the SRAT service on the local network without manual configuration. The feature is controlled by a new `MDNSRegistration` boolean setting in the advanced settings section.
-
-#### 🐛 Bug Fixes
-
-- **HDIdle service permanently broken after first Stop()**: `Stop()` no longer
-  leaves `stopChan` non-nil after close. Subsequent `Start()` calls now succeed
-  (idempotent). Fixes a latent bug where the service refused to restart after
-  any config PUT.
-- **Nested mutex deadlock** in `GetDeviceStatus`, `GetProcessStatus`, and
-  `observeDiskActivity`: calls to `IsRunning()` under an existing lock now read
-  `stopChan` directly to avoid the deadlock inherent in re-acquiring an
-  `RWMutex` that is not guaranteed reentrant.
-- **`GetDeviceConfig` returned HTTP 500 when service disabled**: the guard
-  `!s.config.Enabled → ErrorHDIdleNotSupported` has been removed. The config
-  endpoint is now always available for inspection/configuration regardless of
-  whether the monitor goroutine is running.
-- **`disk_id` injected unsanitised into file path**: `hdidle_handler.go` was
-  naïvely prefixing every `disk_id` with `/dev/disk/by-id/` without validation.
-  Replaced by `HDIdleServiceInterface.ResolveDevicePath()` which probes three
-  candidate paths (absolute `/dev/…`, by-id, kernel name) and rejects inputs
-  containing path-traversal characters.
-
-#### 🔄 Breaking Changes
-
-- `Settings.hdidle_enabled`, `hdidle_default_idle_time`, `hdidle_default_command_type`,
-  `hdidle_default_power_condition`, and `hdidle_ignore_spin_down_detection` have
-  been **removed** from the API and the DB (migration 00017 drops the
-  corresponding rows from the `properties` table).
-- `POST /api/hdidle/start` and `POST /api/hdidle/stop` have been **removed**.
-  The service lifecycle is now fully automatic (driven by the per-disk records).
-- `PATCH /api/disk/{id}/hdidle/config` has been **removed** (it was a dead spec
-  entry with no handler).
-
-#### 🏗 Chore
-
-- DB migration `00017` (`drop_global_hdidle_properties`): deletes the five
-  obsolete global HDIdle property rows. Down migration re-seeds them with their
-  original defaults for dev/test rollback.
-- `events.PowerEvent` now carries a `Kind PowerEventKind` discriminant field
-  (`config` or `status`) so subscribers can branch without comparing zero-values.
-- Two new `dto.HDIdleDevice` fields (`SuggestionIgnored`, `ForceEnabled`) and
-  matching GORM/generated-layer/converter updates. Schema columns are added by
-  GORM `AutoMigrate` on the next startup — no manual migration needed.
-- `openapi.json` is **not regenerated** in this branch — it requires a working
-  Go toolchain and `go run ./cmd/srat-openapi`. **CI must run**
-  `go run ./cmd/srat-openapi -dir=backend/docs` and
-  `cd frontend && bun run gen:api` before merging to keep generated artifacts in
-  sync. Three hand-edited generated files (`config_to_dto_conv_gen.go`,
-  `dto_to_dbom_conv_gen.go`, `g/hdidle_device_config.go`) are aligned with their
-  source directives — a `go generate ./...` run will produce the same output.
-
-#### 🔧 Maintenance
-
-- **Multi-variant server release**: Release archives now ship three `srat-server` variants — `srat-server-static` (fully static, zero shared-library dependencies), `srat-server-musl` (dynamic linked against musl libc, built via Zig), and `srat-server-glib` (dynamic linked against glibc, built via CGO). The `srat-server` entry in the archive is a symlink that defaults to `srat-server-static`; the upgrade process automatically updates it to the best available variant for the running system (musl → glibc → static). `srat-openapi` is no longer included in release archives. `srat-cli` is always statically linked.
-
 
 ## 2026.6.0-rc10
 
