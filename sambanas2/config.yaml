@@ -1,6 +1,6 @@
 ---
-name: Samba NAS2-β
-version: 2026.9.1-beta.185
+name: Samba NAS2
+version: 2026.9.1-rc14
 slug: sambanas2
 description: Expose Home Assistant disc with SMB/CIFS
 url: https://github.com/dianlight/hassio-addons/tree/master/sambanas2
@@ -79,7 +79,7 @@ devicetree: false
 apparmor: true
 host_ipc: true
 advanced: true
-homeassistant: 2026.4.0
+homeassistant: 2025.8.0
 backup: hot
 auth_api: true
 homeassistant_api: true
