@@ -1,5 +1,24 @@
 # Changelog
 
+## 2026.9.1-rc14
+
+### 🙏 Thanks
+
+- Thanks to all the contributors and users that help to make this app better.
+
+### 🚨 Notes
+
+- This is a release candidate version, it may contain bugs and issues. Use it at your own risk. It is not recommended to use this version in production environments.
+- Minimum supported Home Assistant version is 2025.8.0.
+
+### ✨ Features
+
+- Refreshed documentation in plain language: new sections for Lab Mode, local-network discovery, disk health and disk sleep, volumes, faster connections, and troubleshooting.
+
+### 🏗 Chore
+
+- Update base image to v21.0.5.
+
 ## 2026.9.0-rc14
 
 ### 🙏 Thanks
