@@ -9,7 +9,7 @@
 ### 🚨 Notes
 
 - This is a release candidate version, it may contain bugs and issues. Use it at your own risk. It is not recommended to use this version in production environments.
-- Minimum supported Home Assistant version is 2025.8.0.
+- Minimum supported Home Assistant version is 2026.4.0.
 
 ### ✨ Features
 
@@ -69,7 +69,7 @@
 - Update SRAT to v2026.8.0-rc12
 
 #### 🐛 Bug Fixes
-- Fix [#726](https://github.com/.../issues/726) [Samba NAS2] No way to manually mount disk
+- Fix [#726](https://github.com/dianlight/hassio-addons/issues/726) [Samba NAS2] No way to manually mount disk
 
 ## 2026.7.0-rc11
 
